@@ -6,6 +6,7 @@ class ColorManager{
   static Color webPlatformBgColor = HexColor.fromHex("#1C1C1C");
   static Color white = HexColor.fromHex("#FFFFFF");
   static Color black = HexColor.fromHex("#000000");
+  static Color instagramColor1 = HexColor.fromHex("#E13022");
 
 }
 
