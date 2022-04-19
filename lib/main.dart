@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/presenter/login/login_screen.dart';
 import 'package:flutter_instagram_clone/resources/theme_manager.dart';
 
-const bool darkModeEnabled = false;
+const bool darkModeEnabled = true;
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   if(kIsWeb){
