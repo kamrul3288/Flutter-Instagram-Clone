@@ -24,4 +24,19 @@ class AppImagePicker{
     return image?.readAsBytes();
   }
 
+  Future<Uint8List?> pickImage({
+    required ImageSource source,
+    required double maxWidth,
+    required double maxHeight,
+    required int imageQuality,
+  })async{
+    final XFile? image = await _picker.pickImage(
+        source: source,
+        maxWidth: maxWidth,
+        maxHeight: maxHeight,
+        imageQuality: imageQuality
+    );
+    return image?.readAsBytes();
+  }
+
 }
