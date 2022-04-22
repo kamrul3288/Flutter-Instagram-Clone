@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_clone/main.dart';
 import 'package:flutter_instagram_clone/presenter/login/login_view_model.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/font_manager.dart';
@@ -36,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _setProgressbarStatus(false);
     if(result == resultSuccess){
       showToastMessage("You are successfully logged in");
+      NavigationService.navigatorKey.currentContext!.pushAndRemoveUntil(screenName: responsiveLayoutScreenObject);
     }else{
       showToastMessage(result);
     }

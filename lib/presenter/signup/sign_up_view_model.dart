@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_instagram_clone/model/user_model.dart';
 import 'package:flutter_instagram_clone/utils/app_config.dart';
 import 'package:flutter_instagram_clone/utils/app_constants.dart';
 
@@ -30,15 +31,16 @@ class SignUpViewModel{
         TaskSnapshot taskSnapshot = await uploadTask;
         final profileImageUrl = await taskSnapshot.ref.getDownloadURL();
 
-        _database.collection(databaseUserPath).doc(credential.user!.uid).set({
-          "user_name":name,
-          "email":email,
-          "quote":quote.isEmpty ? "I am new user":quote,
-          "profile_image_url":profileImageUrl,
-          "joined_at":DateTime.now(),
-          "followers":[],
-          "following":[]
-        });
+        UserModel user = UserModel(
+            userName: name,
+            email: email,
+            quote: quote.isEmpty ? "I am new user":quote,
+            profileImageUrl: profileImageUrl,
+            joinedAt: Timestamp.now(),
+            followers: [],
+            following: []
+        );
+        _database.collection(databaseUserPath).doc(credential.user!.uid).set(user.toJson());
         result = resultSuccess;
       }
     }catch(e){
