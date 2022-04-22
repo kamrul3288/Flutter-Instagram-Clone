@@ -58,6 +58,11 @@ ThemeData _lightTheme() {
       selectedItemColor: ColorManager.black,
       unselectedItemColor: Colors.grey,
     ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: ColorManager.lightModeAppbarColor,
+      elevation: 0,
+      titleTextStyle: mediumTextStyle(fontSize: FontSize.s18)
+    )
   );
 }
 

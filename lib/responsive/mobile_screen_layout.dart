@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/presenter/addpost/add_post_screen.dart';
+import 'package:flutter_instagram_clone/presenter/feed/feed_list_screen.dart';
 import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,7 @@ class MobileScreenLayout extends StatefulWidget {
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
-  int _bottomNavigationSelectedIndex = 2;
+  int _bottomNavigationSelectedIndex = 0;
 
   void _onBottomNavigationItemTapped(int index) {
     setState(() {
@@ -21,7 +22,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   }
 
   static const List<Widget> _bottomNavigationScreen = [
-    Text("Home"),
+    FeedListScreen(),
     Text("Search"),
     AddPostScreen(),
     Text("Favourite"),

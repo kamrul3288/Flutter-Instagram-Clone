@@ -7,6 +7,8 @@ class ColorManager{
   static Color white = HexColor.fromHex("#FFFFFF");
   static Color black = HexColor.fromHex("#000000");
   static Color instagramColor1 = HexColor.fromHex("#E13022");
+  static Color lightModeAppbarColor = HexColor.fromHex("#F9F9F9");
+  static Color dimGray = HexColor.fromHex("#696969");
 
 }
 
