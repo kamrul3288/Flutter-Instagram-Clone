@@ -1,13 +1,18 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/base/di_get_it.dart';
+import 'package:flutter_instagram_clone/presenter/addpost/add_post_view_model.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/font_manager.dart';
 import 'package:flutter_instagram_clone/resources/text_style_manager.dart';
 import 'package:flutter_instagram_clone/resources/values_manager.dart';
 import 'package:flutter_instagram_clone/utils/app_constants.dart';
+import 'package:flutter_instagram_clone/utils/common_utility_extension.dart';
 import 'package:flutter_instagram_clone/utils/image_picker.dart';
+import 'package:flutter_instagram_clone/utils/utils.dart';
+import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({Key? key}) : super(key: key);
@@ -19,10 +24,12 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   Uint8List? _imageFile;
   final _appImagePicker = di<AppImagePicker>();
-
+  final _formKey = GlobalKey<FormState>();
   final _postCaptionController = TextEditingController();
+  final viewModel = di<AddPostViewModel>();
+  var _isLoading = false;
 
-
+  
   void _showImagePickerTypeDialog(){
     showDialog(
         context: context,
@@ -84,15 +91,44 @@ class _AddPostScreenState extends State<AddPostScreen> {
     });
   }
 
+  _publishPost()async{
+    _setProgressbarStatus(true);
+    final user = Provider.of<UserProviderViewModel>(context,listen: false).getDatabaseUser;
+    final result = await viewModel.publishPost(
+        description: _postCaptionController.toText(),
+        postImageFile: _imageFile!, 
+        userName: user.userName,
+        userProfileImageUrl: user.profileImageUrl,
+        userUid: user.userId
+    );
+    if(result == resultSuccess){
+      showToastMessage("Your post is posted successfully!");
+    }else{
+      showToastMessage(result);
+    }
+    _setProgressbarStatus(false);
+    setState(() {
+      _imageFile = null;
+    });
+  }
+
+  _setProgressbarStatus(bool status){
+    setState(() {
+      _isLoading = status;
+    });
+  }
+
   
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProviderViewModel>(context).getDatabaseUser;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create a Post"),
       ),
-      body: Container(
+      body: _isLoading ? const Center(child: CircularProgressIndicator(),)
+      :Container(
         padding: const EdgeInsets.all(AppMargin.m16),
         child: _imageFile == null ?
         // only upload icon section
@@ -107,70 +143,79 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ],
           ),
         )
-        :SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
+        :Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
 
-              //profile info
-              Row(
-                children: const [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundColor: Colors.white,
+                //profile info
+                Row(
+                  children:[
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: NetworkImage(user.profileImageUrl),
+                    ),
+                    const SizedBox(width: 8,),
+                    Text(user.userName)
+                  ],
+                ),
+
+                //caption
+                const SizedBox(height: AppMargin.m16,),
+                TextFormField(
+                  controller: _postCaptionController,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    hintText: "What's on your mind?",
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
                   ),
-                  SizedBox(width: 8,),
-                  Text("Kamran Hasan")
-                ],
-              ),
-
-              //caption
-              TextField(
-                controller: _postCaptionController,
-                maxLines: 5,
-                decoration: const InputDecoration(
-                  hintText: "What's on your mind?",
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                ),
-              ),
-
-              //picked image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppMargin.m16),
-                child: Image.memory(
-                  _imageFile!,
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-
-              //post button
-              const SizedBox(height: AppMargin.m36,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: (){
-
+                  validator: (value){
+                    return value?.isEmpty==true ? "Please add post description" : null;
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(ColorManager.instagramColor1),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppMargin.m8)
+                ),
+
+                //picked image
+                const SizedBox(height: AppMargin.m16,),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppMargin.m16),
+                  child: Image.memory(
+                    _imageFile!,
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                //post button
+                const SizedBox(height: AppMargin.m36,),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 45,
+                  child: ElevatedButton(
+                    onPressed: (){
+                      if (!_formKey.currentState!.validate()) return;
+                      _publishPost();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(ColorManager.instagramColor1),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppMargin.m8)
+                        ),
                       ),
                     ),
+                    child: const Text("Posts"),
                   ),
-                  child: const Text("Posts"),
                 ),
-              ),
 
-            ],
+              ],
+            ),
           ),
         ),
       ),

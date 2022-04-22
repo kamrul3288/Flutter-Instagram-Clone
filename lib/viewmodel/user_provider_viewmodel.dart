@@ -19,6 +19,7 @@ class UserProviderViewModel extends ViewModel{
     _databaseUserModel = UserModel(
         userName: data["user_name"],
         email: data["email"],
+        userId: data["user_id"],
         quote: data["quote"],
         profileImageUrl: data["profile_image_url"],
         joinedAt: data["joined_at"],

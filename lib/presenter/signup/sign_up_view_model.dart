@@ -34,6 +34,7 @@ class SignUpViewModel{
         UserModel user = UserModel(
             userName: name,
             email: email,
+            userId: credential.user!.uid,
             quote: quote.isEmpty ? "I am new user":quote,
             profileImageUrl: profileImageUrl,
             joinedAt: Timestamp.now(),
