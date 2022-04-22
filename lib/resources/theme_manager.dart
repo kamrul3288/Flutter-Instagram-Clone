@@ -28,6 +28,10 @@ ThemeData _darkTheme() {
     textSelectionTheme: const TextSelectionThemeData(
       cursorColor: Colors.white,
     ),
+    bottomNavigationBarTheme:BottomNavigationBarThemeData(
+      selectedItemColor: ColorManager.white,
+      unselectedItemColor: Colors.white38
+    )
   );
 }
 
@@ -49,6 +53,10 @@ ThemeData _lightTheme() {
     ),
     textSelectionTheme: const TextSelectionThemeData(
       cursorColor: Colors.grey,
+    ),
+    bottomNavigationBarTheme:BottomNavigationBarThemeData(
+      selectedItemColor: ColorManager.black,
+      unselectedItemColor: Colors.grey,
     ),
   );
 }
