@@ -11,7 +11,7 @@ import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'base/di_get_it.dart' as di;
 
-const bool darkModeEnabled = true;
+const bool darkModeEnabled = false;
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   di.initializeDependencies();

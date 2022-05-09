@@ -29,7 +29,7 @@ ThemeData _darkTheme() {
       cursorColor: Colors.white,
     ),
     bottomNavigationBarTheme:BottomNavigationBarThemeData(
-      selectedItemColor: ColorManager.white,
+      selectedItemColor: ColorManager.instagramColor1,
       unselectedItemColor: Colors.white38
     )
   );
@@ -55,7 +55,7 @@ ThemeData _lightTheme() {
       cursorColor: Colors.grey,
     ),
     bottomNavigationBarTheme:BottomNavigationBarThemeData(
-      selectedItemColor: ColorManager.black,
+      selectedItemColor: ColorManager.instagramColor1,
       unselectedItemColor: Colors.grey,
     ),
     appBarTheme: AppBarTheme(

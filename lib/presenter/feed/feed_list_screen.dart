@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_clone/base/di_get_it.dart';
+import 'package:flutter_instagram_clone/presenter/feed/feed_list_viewmodel.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/font_manager.dart';
 import 'package:flutter_instagram_clone/resources/text_style_manager.dart';
 import 'package:flutter_instagram_clone/resources/values_manager.dart';
 import 'package:flutter_instagram_clone/utils/app_config.dart';
+import 'package:flutter_instagram_clone/utils/utils.dart';
+import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 
 class FeedListScreen extends StatefulWidget {
@@ -15,8 +20,12 @@ class FeedListScreen extends StatefulWidget {
 }
 
 class _FeedListScreenState extends State<FeedListScreen> {
+
+  final viewModel = di<FeedListViewModel>();
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProviderViewModel>(context,listen: false).getDatabaseUser;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Feed"),
@@ -56,7 +65,7 @@ class _FeedListScreenState extends State<FeedListScreen> {
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children:  [
                                Text(data['user_name'],style: boldTextStyle(fontSize: FontSize.s14),),
-                               Text("15 min ago",style: lightTextStyle(),)
+                               Text(convertTimeStampToReadableTime(data["date_published"]),style: lightTextStyle(),)
                              ],
                            ),
                          ],
@@ -85,9 +94,21 @@ class _FeedListScreenState extends State<FeedListScreen> {
                        Row(
                          children:  [
                            //likes
-                           const Icon(Icons.favorite,color: Colors.grey,),
+                           InkWell(
+                             child: Icon(
+                               Icons.favorite,
+                               color: data['likes'].contains(user.userId) ? Colors.red : Colors.grey
+                             ),
+                             onDoubleTap: (){
+                               viewModel.likesPost(
+                                   postId: data['post_id'],
+                                   userId:user.userId,
+                                   likes: data['likes']
+                               );
+                             },
+                           ),
                            const SizedBox(width: AppMargin.m4,),
-                           Text("0 likes",style: regularTextStyle(),),
+                           Text("${data['likes'].length} likes",style: regularTextStyle(),),
 
                            //comment
                            const SizedBox(width: AppMargin.m16,),
