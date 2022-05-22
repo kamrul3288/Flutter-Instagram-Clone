@@ -24,4 +24,18 @@ class FeedListViewModel{
       debugPrint(exception.toString());
     }
   }
+
+  Future<int> getPostComment(String postId) async{
+    try{
+      QuerySnapshot snapshot = await _database.collection(databasePostPath)
+          .doc(postId)
+          .collection(commentPath)
+          .get();
+      return snapshot.docs.length;
+
+    }catch(exception){
+      debugPrint(exception.toString());
+      return 0;
+    }
+  }
 }

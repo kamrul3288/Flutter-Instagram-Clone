@@ -49,5 +49,7 @@
     <string>Camera Photo Access</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Microphone Access Needed</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

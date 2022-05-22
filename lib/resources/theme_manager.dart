@@ -61,7 +61,10 @@ ThemeData _lightTheme() {
     appBarTheme: AppBarTheme(
       backgroundColor: ColorManager.lightModeAppbarColor,
       elevation: 0,
-      titleTextStyle: mediumTextStyle(fontSize: FontSize.s18)
+      titleTextStyle: mediumTextStyle(fontSize: FontSize.s18),
+      iconTheme: const IconThemeData(
+        color: Colors.black
+      )
     )
   );
 }

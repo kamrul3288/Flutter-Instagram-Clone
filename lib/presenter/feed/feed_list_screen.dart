@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/base/di_get_it.dart';
+import 'package:flutter_instagram_clone/presenter/comment/comment_screen.dart';
 import 'package:flutter_instagram_clone/presenter/feed/feed_list_viewmodel.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/font_manager.dart';
 import 'package:flutter_instagram_clone/resources/text_style_manager.dart';
 import 'package:flutter_instagram_clone/resources/values_manager.dart';
 import 'package:flutter_instagram_clone/utils/app_config.dart';
+import 'package:flutter_instagram_clone/utils/navigator_extension.dart';
 import 'package:flutter_instagram_clone/utils/utils.dart';
 import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -112,9 +114,26 @@ class _FeedListScreenState extends State<FeedListScreen> {
 
                            //comment
                            const SizedBox(width: AppMargin.m16,),
-                           const Icon(Icons.comment,color: Colors.grey,),
+                           IconButton(
+                             onPressed: (){
+                               context.push(screenName: CommentScreen(postData: data));
+                             },
+                             icon: const Icon(Icons.comment,color: Colors.grey),
+                           ),
                            const SizedBox(width: AppMargin.m4,),
-                           Text("3",style: regularTextStyle(),),
+                           
+
+                           StreamBuilder(
+                             stream:  FirebaseFirestore.instance.collection(databasePostPath) .doc(data["post_id"])
+                                 .collection(commentPath).snapshots(),
+                             builder: (context,AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>commentSnapshot){
+                               if(commentSnapshot.connectionState == ConnectionState.waiting){
+                                 return  Text("0 Comments",style: regularTextStyle());
+                               }
+                               return Text("${commentSnapshot.data?.docs.length ?? 0} Comments",style: regularTextStyle());
+                             },
+                           )
+
                          ],
                        ),
 
