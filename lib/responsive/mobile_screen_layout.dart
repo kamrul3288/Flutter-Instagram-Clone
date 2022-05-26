@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/presenter/addpost/add_post_screen.dart';
+import 'package:flutter_instagram_clone/presenter/bookmark/book_mark_screen.dart';
 import 'package:flutter_instagram_clone/presenter/feed/feed_list_screen.dart';
 import 'package:flutter_instagram_clone/presenter/search/search_screen.dart';
 
@@ -12,7 +13,7 @@ class MobileScreenLayout extends StatefulWidget {
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
-  int _bottomNavigationSelectedIndex = 1;
+  int _bottomNavigationSelectedIndex = 0;
 
   void _onBottomNavigationItemTapped(int index) {
     setState(() {
@@ -24,7 +25,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     FeedListScreen(),
     SearchScreen(),
     AddPostScreen(),
-    Text("Favourite"),
+    BookMarkScreen(),
     Text("Profile"),
   ];
 
@@ -54,7 +55,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
+            icon: Icon(Icons.bookmarks),
             label: '',
           ),
           BottomNavigationBarItem(

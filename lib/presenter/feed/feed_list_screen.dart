@@ -35,11 +35,13 @@ class _FeedListScreenState extends State<FeedListScreen> {
       ),
       body: SafeArea(
        child: StreamBuilder(
-         stream: FirebaseFirestore.instance.collection(databasePostPath).snapshots(),
+         stream: FirebaseFirestore.instance.collection(databasePostPath)
+             .orderBy("date_published",descending: true).snapshots(),
          builder: (context,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>> snapshot){
            if(snapshot.connectionState == ConnectionState.waiting){
              return const Center(child: CircularProgressIndicator(),);
            }
+
            return snapshot.data!.docs.isEmpty ?
            const Center(
              child: Text("Opps!, No Feeds found!"),
@@ -122,7 +124,7 @@ class _FeedListScreenState extends State<FeedListScreen> {
                              icon: const Icon(Icons.comment,color: Colors.grey),
                            ),
                            const SizedBox(width: AppMargin.m4,),
-                           
+
 
                            StreamBuilder(
                              stream:  FirebaseFirestore.instance.collection(databasePostPath) .doc(post.postId)

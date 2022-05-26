@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_clone/base/screen_state.dart';
 import 'package:flutter_instagram_clone/resources/values_manager.dart';
 import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -26,12 +27,31 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
+/*    return LayoutBuilder(
       builder: (context, constraints){
         return constraints.maxWidth>PlatformSize.webScreenSze ? widget.webView : widget.mobileView;
+      },
+    );*/
+    return Consumer<UserProviderViewModel>(
+      builder: (context,viewModel,child){
+        if(viewModel.state != ScreenState.success) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator(),),
+          ) ;
+        }
+        else {
+          return LayoutBuilder(
+              builder: (context, constraints){
+                return constraints.maxWidth>PlatformSize.webScreenSze ? widget.webView : widget.mobileView;
+              }
+          );
+        }
       },
     );
   }
 }
+
+
