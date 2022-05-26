@@ -138,7 +138,17 @@ class _FeedListScreenState extends State<FeedListScreen> {
                          ],
                        ),
 
-                       const Icon(Icons.bookmark_border,color: Colors.grey,),
+                       //Bookmark or favourite
+                       InkWell(
+                         child:  Icon(Icons.bookmark_border,color: post.bookmarks.contains(user.userId) ? Colors.red : Colors.grey,),
+                         onTap: (){
+                           viewModel.bookmarkPost(
+                               postId: post.postId,
+                               userId: user.userId,
+                               bookmarks: post.bookmarks
+                           );
+                         },
+                       ),
                      ],
                    ),
 

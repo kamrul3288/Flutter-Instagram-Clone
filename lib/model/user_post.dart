@@ -10,6 +10,7 @@ class Post{
   final String postUrl;
   final String profileImageUrl;
   final List likes;
+  final List bookmarks;
 
   const Post({
     required this.description,
@@ -19,7 +20,8 @@ class Post{
     required this.datePublished,
     required this.postUrl,
     required this.profileImageUrl,
-    required this.likes
+    required this.likes,
+    required this.bookmarks,
   });
 
 
@@ -31,7 +33,8 @@ class Post{
     "date_published":datePublished,
     "post_url":postUrl,
     "profile_image_url":profileImageUrl,
-    "likes":likes
+    "likes":likes,
+    "bookmarks":bookmarks
   };
 
   static Post mapToPost(Map<String,dynamic> snapshot){
@@ -43,7 +46,8 @@ class Post{
         datePublished: snapshot["date_published"],
         postUrl: snapshot["post_url"],
         profileImageUrl: snapshot["profile_image_url"],
-        likes: snapshot["likes"]
+        likes: snapshot["likes"],
+        bookmarks: snapshot["bookmarks"]
     );
   }
 }

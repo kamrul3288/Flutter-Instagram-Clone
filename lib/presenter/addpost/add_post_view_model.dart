@@ -27,14 +27,15 @@ class AddPostViewModel{
 
       final postId = const Uuid().v1();
       Post post = Post(
-          description: description,
-          userUid: userUid,
-          userName: userName,
-          postId: postId,
-          datePublished:Timestamp.now(),
-          postUrl: postImageUrl,
-          profileImageUrl:userProfileImageUrl,
-          likes: []
+        description: description,
+        userUid: userUid,
+        userName: userName,
+        postId: postId,
+        datePublished:Timestamp.now(),
+        postUrl: postImageUrl,
+        profileImageUrl:userProfileImageUrl,
+        likes: [],
+        bookmarks: []
       );
       _database.collection(databasePostPath).doc(postId).set(post.toJson());
       result = resultSuccess;

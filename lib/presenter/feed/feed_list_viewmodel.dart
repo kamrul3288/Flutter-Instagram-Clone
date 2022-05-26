@@ -25,6 +25,27 @@ class FeedListViewModel{
     }
   }
 
+  Future<void> bookmarkPost({
+    required String postId,
+    required String userId,
+    required List bookmarks
+  })async{
+    try{
+      if(bookmarks.contains(userId)){
+        await _database.collection(databasePostPath).doc(postId).update(
+            {'bookmarks':FieldValue.arrayRemove([userId])}
+        );
+
+      }else{
+        await _database.collection(databasePostPath).doc(postId).update(
+            {'bookmarks':FieldValue.arrayUnion([userId])}
+        );
+      }
+    }catch(exception){
+      debugPrint(exception.toString());
+    }
+  }
+
   Future<int> getPostComment(String postId) async{
     try{
       QuerySnapshot snapshot = await _database.collection(databasePostPath)
