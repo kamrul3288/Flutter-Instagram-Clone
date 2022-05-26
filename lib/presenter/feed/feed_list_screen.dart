@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/base/di_get_it.dart';
+import 'package:flutter_instagram_clone/model/user_post.dart';
 import 'package:flutter_instagram_clone/presenter/comment/comment_screen.dart';
 import 'package:flutter_instagram_clone/presenter/feed/feed_list_viewmodel.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
@@ -47,7 +48,7 @@ class _FeedListScreenState extends State<FeedListScreen> {
              padding: const EdgeInsets.all(AppMargin.m16),
              itemCount: snapshot.data!.docs.length,
              itemBuilder: (context,index){
-               final data = snapshot.data!.docs[index];
+               final post = Post.mapToPost(snapshot.data!.docs[index].data());
                return Column(
                  children:  [
                    Row(
@@ -58,7 +59,7 @@ class _FeedListScreenState extends State<FeedListScreen> {
                            //profile image
                            CircleAvatar(
                              radius: 25,
-                             backgroundImage: NetworkImage(data['profile_image_url']),
+                             backgroundImage: NetworkImage(post.profileImageUrl),
                            ),
 
                            // user name
@@ -66,8 +67,8 @@ class _FeedListScreenState extends State<FeedListScreen> {
                            Column(
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children:  [
-                               Text(data['user_name'],style: boldTextStyle(fontSize: FontSize.s14),),
-                               Text(convertTimeStampToReadableTime(data["date_published"]),style: lightTextStyle(),)
+                               Text(post.userName,style: boldTextStyle(fontSize: FontSize.s14),),
+                               Text(convertTimeStampToReadableTime(post.datePublished),style: lightTextStyle(),)
                              ],
                            ),
                          ],
@@ -81,7 +82,7 @@ class _FeedListScreenState extends State<FeedListScreen> {
                    ClipRRect(
                      borderRadius: BorderRadius.circular(AppMargin.m8),
                      child: Image.network(
-                       data['post_url'],
+                       post.postUrl,
                        width: MediaQuery.of(context).size.width,
                        height: 170,
                        fit: BoxFit.cover,
@@ -99,24 +100,24 @@ class _FeedListScreenState extends State<FeedListScreen> {
                            InkWell(
                              child: Icon(
                                Icons.favorite,
-                               color: data['likes'].contains(user.userId) ? Colors.red : Colors.grey
+                               color: post.likes.contains(user.userId) ? Colors.red : Colors.grey
                              ),
                              onDoubleTap: (){
                                viewModel.likesPost(
-                                   postId: data['post_id'],
+                                   postId: post.postId,
                                    userId:user.userId,
-                                   likes: data['likes']
+                                   likes: post.likes
                                );
                              },
                            ),
                            const SizedBox(width: AppMargin.m4,),
-                           Text("${data['likes'].length} likes",style: regularTextStyle(),),
+                           Text("${post.likes.length} likes",style: regularTextStyle(),),
 
                            //comment
                            const SizedBox(width: AppMargin.m16,),
                            IconButton(
                              onPressed: (){
-                               context.push(screenName: CommentScreen(postData: data));
+                               context.push(screenName: CommentScreen(postData: post));
                              },
                              icon: const Icon(Icons.comment,color: Colors.grey),
                            ),
@@ -124,7 +125,7 @@ class _FeedListScreenState extends State<FeedListScreen> {
                            
 
                            StreamBuilder(
-                             stream:  FirebaseFirestore.instance.collection(databasePostPath) .doc(data["post_id"])
+                             stream:  FirebaseFirestore.instance.collection(databasePostPath) .doc(post.postId)
                                  .collection(commentPath).snapshots(),
                              builder: (context,AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>commentSnapshot){
                                if(commentSnapshot.connectionState == ConnectionState.waiting){
@@ -144,7 +145,7 @@ class _FeedListScreenState extends State<FeedListScreen> {
                    //post description
                    const SizedBox(height: AppMargin.m8,),
                    Text(
-                     data['description'],
+                     post.description,
                      style: regularTextStyle(fontSize: FontSize.s14,color: ColorManager.dimGray),
                      maxLines: 3,
                      overflow: TextOverflow.ellipsis,

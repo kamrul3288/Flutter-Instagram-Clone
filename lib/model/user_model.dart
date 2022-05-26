@@ -1,5 +1,6 @@
 
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel{
@@ -34,4 +35,17 @@ class UserModel{
     "followers":followers,
     "following":following
   };
+
+  static UserModel mapToUserModel(Map<String, dynamic> snapshot){
+    return UserModel(
+        userName: snapshot["user_name"],
+        email: snapshot["email"],
+        userId: snapshot["user_id"],
+        quote: snapshot["quote"],
+        profileImageUrl: snapshot["profile_image_url"],
+        joinedAt: snapshot["joined_at"],
+        followers: snapshot["followers"],
+        following: snapshot["following"]
+    );
+  }
 }

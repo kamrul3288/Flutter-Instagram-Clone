@@ -33,4 +33,17 @@ class Post{
     "profile_image_url":profileImageUrl,
     "likes":likes
   };
+
+  static Post mapToPost(Map<String,dynamic> snapshot){
+    return Post(
+        description: snapshot["description"],
+        userUid: snapshot["user_uid"],
+        userName: snapshot["user_name"],
+        postId: snapshot["post_id"],
+        datePublished: snapshot["date_published"],
+        postUrl: snapshot["post_url"],
+        profileImageUrl: snapshot["profile_image_url"],
+        likes: snapshot["likes"]
+    );
+  }
 }

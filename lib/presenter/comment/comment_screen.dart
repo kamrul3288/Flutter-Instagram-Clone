@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/base/di_get_it.dart';
 import 'package:flutter_instagram_clone/main.dart';
+import 'package:flutter_instagram_clone/model/PostComment.dart';
+import 'package:flutter_instagram_clone/model/user_post.dart';
 import 'package:flutter_instagram_clone/presenter/comment/CommentViewModel.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/text_style_manager.dart';
@@ -11,7 +13,7 @@ import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class CommentScreen extends StatefulWidget {
-  final QueryDocumentSnapshot<Map<String, dynamic>> postData;
+  final Post postData;
   const CommentScreen({Key? key,required this.postData}) : super(key: key);
 
   @override
@@ -66,7 +68,7 @@ class _CommentScreenState extends State<CommentScreen> {
               TextButton(
                   onPressed:(){
                     _viewModel.postComment(
-                        postId: widget.postData["post_id"],
+                        postId: widget.postData.postId,
                         comment: _commentController.toText(),
                         userId: user.userId,
                         userName: user.userName,
@@ -84,7 +86,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection(databasePostPath)
-            .doc(widget.postData['post_id']).collection(commentPath).snapshots(),
+            .doc(widget.postData.postId).collection(commentPath).snapshots(),
         builder: (context,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>> snapshot){
           if(snapshot.connectionState == ConnectionState.waiting){
             return const Center(
@@ -100,13 +102,13 @@ class _CommentScreenState extends State<CommentScreen> {
             padding: const EdgeInsets.all(16),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context,index){
-              final data = snapshot.data!.docs[index];
+              final postComment = PostComment.mapToPostComment(snapshot.data!.docs[index].data());
               return Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(data['profile_image_url']),
+                      backgroundImage: NetworkImage(postComment.profileImageUrl),
                       radius: 18,
                     ),
 
@@ -119,8 +121,8 @@ class _CommentScreenState extends State<CommentScreen> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(data['user_name'],style: mediumTextStyle(),),
-                            Text(data['comment'],style: regularTextStyle(),)
+                            Text(postComment.userName,style: mediumTextStyle(),),
+                            Text(postComment.comment,style: regularTextStyle(),)
                           ],
                         ),
                         decoration: BoxDecoration(

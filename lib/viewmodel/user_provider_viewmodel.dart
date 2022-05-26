@@ -15,17 +15,8 @@ class UserProviderViewModel extends ViewModel{
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
-    final data = documentSnapshot.data() as Map<String,dynamic>;
-    _databaseUserModel = UserModel(
-        userName: data["user_name"],
-        email: data["email"],
-        userId: data["user_id"],
-        quote: data["quote"],
-        profileImageUrl: data["profile_image_url"],
-        joinedAt: data["joined_at"],
-        followers: data["followers"],
-        following: data["following"]
-    );
+    final snapshot = documentSnapshot.data() as Map<String,dynamic>;
+    _databaseUserModel = UserModel.mapToUserModel(snapshot);
     successfulState();
   }
 }
