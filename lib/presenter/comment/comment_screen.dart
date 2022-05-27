@@ -7,6 +7,7 @@ import 'package:flutter_instagram_clone/model/user_post.dart';
 import 'package:flutter_instagram_clone/presenter/comment/CommentViewModel.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/text_style_manager.dart';
+import 'package:flutter_instagram_clone/resources/values_manager.dart';
 import 'package:flutter_instagram_clone/utils/app_config.dart';
 import 'package:flutter_instagram_clone/utils/common_utility_extension.dart';
 import 'package:flutter_instagram_clone/viewmodel/user_provider_viewmodel.dart';
@@ -36,7 +37,10 @@ class _CommentScreenState extends State<CommentScreen> {
       bottomNavigationBar: SafeArea(
         child: Container(
           margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          padding: const EdgeInsets.only(left: 16,right: 16),
+          //check it web or mobile version
+          padding: MediaQuery.of(context).size.width>PlatformSize.webScreenSze?
+          EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3.5)
+              :const EdgeInsets.only(left: 16,right: 16),
           child: Row(
             children:  [
 
@@ -99,7 +103,11 @@ class _CommentScreenState extends State<CommentScreen> {
             child: Text("Opps!, No Comment found!"),
           )
           :ListView.builder(
-            padding: const EdgeInsets.all(16),
+            //check it web or mobile version
+            padding: MediaQuery.of(context).size.width>PlatformSize.webScreenSze?
+            EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3.5,vertical: 16)
+                :const EdgeInsets.all(AppPadding.p16),
+
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context,index){
               final postComment = PostComment.mapToPostComment(snapshot.data!.docs[index].data());

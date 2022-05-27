@@ -63,7 +63,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
 
                 return Container(
-                  padding:  const EdgeInsets.all(16.0),
+                  //check it web or mobile version
+                  padding: MediaQuery.of(context).size.width>PlatformSize.webScreenSze?
+                  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3,vertical: 16)
+                      :const EdgeInsets.all(AppPadding.p16),
+
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

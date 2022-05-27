@@ -6,6 +6,7 @@ import 'package:flutter_instagram_clone/model/user_model.dart';
 import 'package:flutter_instagram_clone/presenter/profile/profile_screen.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/text_style_manager.dart';
+import 'package:flutter_instagram_clone/resources/values_manager.dart';
 import 'package:flutter_instagram_clone/utils/app_config.dart';
 import 'package:flutter_instagram_clone/utils/navigator_extension.dart';
 
@@ -27,7 +28,11 @@ class _SearchScreenState extends State<SearchScreen> {
       
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          //check it web or mobile version
+          padding: MediaQuery.of(context).size.width>PlatformSize.webScreenSze?
+          EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3.5,vertical: 16)
+              :const EdgeInsets.all(AppPadding.p16),
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,6 +88,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           final user = UserModel.mapToUserModel(snapshot.data!.docs[index].data());
                           return user.userId == FirebaseAuth.instance.currentUser!.uid ?Container()
                           :ListTile(
+                            dense:true,
+                            contentPadding: const EdgeInsets.only(left: 0.0, right: 0.0,top: 16),
                             title: Text(user.userName),
                             leading: CircleAvatar(
                               radius: 20,

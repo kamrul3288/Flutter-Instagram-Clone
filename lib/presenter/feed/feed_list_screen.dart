@@ -47,7 +47,11 @@ class _FeedListScreenState extends State<FeedListScreen> {
              child: Text("Opps!, No Feeds found!"),
            )
            :ListView.builder(
-             padding: const EdgeInsets.all(AppMargin.m16),
+             //check it web or mobile version
+             padding: MediaQuery.of(context).size.width>PlatformSize.webScreenSze?
+             EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3.5,vertical: 16)
+                 :const EdgeInsets.all(AppPadding.p16),
+
              itemCount: snapshot.data!.docs.length,
              itemBuilder: (context,index){
                final post = Post.mapToPost(snapshot.data!.docs[index].data());

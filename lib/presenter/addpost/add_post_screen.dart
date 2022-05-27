@@ -129,7 +129,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
       ),
       body: _isLoading ? const Center(child: CircularProgressIndicator(),)
       :Container(
-        padding: const EdgeInsets.all(AppMargin.m16),
+        //check it web or mobile version
+        padding: MediaQuery.of(context).size.width>PlatformSize.webScreenSze?
+        EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/3.5,vertical: 16)
+            :const EdgeInsets.all(AppPadding.p16),
+
         child: _imageFile == null ?
         // only upload icon section
         Center(
