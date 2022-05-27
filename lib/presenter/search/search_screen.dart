@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/main.dart';
 import 'package:flutter_instagram_clone/model/user_model.dart';
@@ -80,7 +81,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context,index){
                           final user = UserModel.mapToUserModel(snapshot.data!.docs[index].data());
-                          return ListTile(
+                          return user.userId == FirebaseAuth.instance.currentUser!.uid ?Container()
+                          :ListTile(
                             title: Text(user.userName),
                             leading: CircleAvatar(
                               radius: 20,
