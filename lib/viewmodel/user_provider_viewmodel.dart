@@ -10,13 +10,18 @@ class UserProviderViewModel extends ViewModel{
   UserModel get getDatabaseUser => _databaseUserModel!;
 
   Future<void> fetchUserData() async{
-    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-        .collection(databaseUserPath)
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+    if(FirebaseAuth.instance.currentUser?.uid != null){
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection(databaseUserPath)
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
 
-    final snapshot = documentSnapshot.data() as Map<String,dynamic>;
-    _databaseUserModel = UserModel.mapToUserModel(snapshot);
-    successfulState();
+      final snapshot = documentSnapshot.data() as Map<String,dynamic>;
+      _databaseUserModel = UserModel.mapToUserModel(snapshot);
+      successfulState();
+    }else{
+      successfulState();
+    }
+
   }
 }

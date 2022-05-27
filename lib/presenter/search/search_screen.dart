@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_clone/main.dart';
+import 'package:flutter_instagram_clone/model/user_model.dart';
+import 'package:flutter_instagram_clone/presenter/profile/profile_screen.dart';
 import 'package:flutter_instagram_clone/resources/color_manager.dart';
 import 'package:flutter_instagram_clone/resources/text_style_manager.dart';
 import 'package:flutter_instagram_clone/utils/app_config.dart';
+import 'package:flutter_instagram_clone/utils/navigator_extension.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -76,12 +79,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     :ListView.builder(
                         itemCount: snapshot.data!.docs.length,
                         itemBuilder: (context,index){
+                          final user = UserModel.mapToUserModel(snapshot.data!.docs[index].data());
                           return ListTile(
-                            title: Text(snapshot.data!.docs[index]['user_name']),
+                            title: Text(user.userName),
                             leading: CircleAvatar(
                               radius: 20,
-                              backgroundImage: NetworkImage(snapshot.data!.docs[index]['profile_image_url']),
+                              backgroundImage: NetworkImage(user.profileImageUrl),
                             ),
+                            onTap: (){
+                              context.push(screenName: ProfileScreen(userId: user.userId));
+                            },
                           );
                         }
                     );
