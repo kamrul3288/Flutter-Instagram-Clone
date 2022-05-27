@@ -129,6 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 onPressed: ()async{
                                   if(user.userId == currentUser.userId){
                                     await FirebaseAuth.instance.signOut();
+                                    context.pushAndRemoveUntil(screenName: loginScreenObject);
                                   }
                                 },
                                 style: ButtonStyle(
